@@ -205,6 +205,6 @@ private fun ProductCard(
             ) {
                 Text("Agregar al carrito", fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
-        }
+        } //
     }
 }
