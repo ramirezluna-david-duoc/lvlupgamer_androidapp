@@ -1,5 +1,6 @@
 package com.example.duoc.ui.screen
 
+import com.example.duoc.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,7 +27,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onNavigateToCatalog: () -> Unit = {}
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -60,10 +64,14 @@ fun HomeScreen(
                             modifier = Modifier.padding(16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = "",
-                                fontSize = 48.sp,
-                                modifier = Modifier.padding(bottom = 8.dp)
+                            // Logo dentro del recuadro del header
+                            Image(
+                                painter = painterResource(id = R.drawable.logo),
+                                contentDescription = "Logo Level Up Gamer",
+                                modifier = Modifier
+                                    .size(72.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
+                                contentScale = ContentScale.Fit
                             )
                             Text(
                                 text = "Level Up Gamer",
@@ -96,6 +104,7 @@ fun HomeScreen(
                         selected = false,
                         onClick = {
                             scope.launch { drawerState.close() }
+                            onNavigateToCatalog()
                         },
                         colors = NavigationDrawerItemDefaults.colors(
                             unselectedContainerColor = Color.Transparent
@@ -191,7 +200,9 @@ fun HomeScreen(
                         icon = { Icon(Icons.Default.ShoppingBag, contentDescription = "Productos") },
                         label = { Text("Productos", color = if (selectedTab == 1) neonGreen else Color.White) },
                         selected = selectedTab == 1,
-                        onClick = { selectedTab = 1 },
+                        onClick = {
+                            onNavigateToCatalog()
+                        },
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = neonGreen,
                             unselectedIconColor = Color.White,
@@ -236,9 +247,14 @@ fun HomeScreen(
                             modifier = Modifier.padding(24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                text = "🎮",
-                                fontSize = 48.sp
+                            // Logo de la empresa en vez de emoji
+                            Image(
+                                painter = painterResource(id = R.drawable.logo),
+                                contentDescription = "Logo Level Up Gamer",
+                                modifier = Modifier
+                                    .size(72.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
+                                contentScale = ContentScale.Fit
                             )
                             Text(
                                 text = "Level Up Gamer",
@@ -280,9 +296,9 @@ fun HomeScreen(
                         // Producto 1
                         ProductCard(
                             modifier = Modifier.weight(1f),
-                            emoji = "⌨️",
-                            name = "Teclado Mecánico RGB",
-                            price = "$120.00",
+                            imageResId = R.drawable.play5, // TODO: reemplazar por imagen real de PS5
+                            name = "PlayStation 5",
+                            price = "$549.990 CLP",
                             neonGreen = neonGreen,
                             electricBlue = electricBlue,
                             cardBackground = cardBackground
@@ -291,9 +307,9 @@ fun HomeScreen(
                         // Producto 2
                         ProductCard(
                             modifier = Modifier.weight(1f),
-                            emoji = "🖱️",
-                            name = "Mouse de Alta Precisión",
-                            price = "$80.00",
+                            imageResId = R.drawable.pc, // TODO: reemplazar por imagen real de PC ASUS ROG Strix
+                            name = "PC Gamer ASUS ROG Strix",
+                            price = "$1.299.990 CLP",
                             neonGreen = neonGreen,
                             electricBlue = electricBlue,
                             cardBackground = cardBackground
@@ -302,9 +318,9 @@ fun HomeScreen(
                         // Producto 3
                         ProductCard(
                             modifier = Modifier.weight(1f),
-                            emoji = "🎧",
-                            name = "Headset Gaming 7.1",
-                            price = "$150.00",
+                            imageResId = R.drawable.mouse, // TODO: reemplazar por imagen real del Mouse Logitech G502 HERO
+                            name = "Mouse Gamer Logitech G502 HERO",
+                            price = "$49.990 CLP",
                             neonGreen = neonGreen,
                             electricBlue = electricBlue,
                             cardBackground = cardBackground
@@ -323,7 +339,7 @@ fun HomeScreen(
                     )
                 }
 
-                // Categorías - Grid 2x3
+                // Categorías - Grid 4x2 (8 categorías)
                 item {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -336,17 +352,15 @@ fun HomeScreen(
                         ) {
                             CategoryCard(
                                 modifier = Modifier.weight(1f),
-                                emoji = "⌨️",
-                                name = "Teclados",
-                                cardBackground = cardBackground,
-                                neonGreen = neonGreen
+                                imageResId = R.drawable.catan2,
+                                name = "Juegos de Mesa",
+                                cardBackground = cardBackground
                             )
                             CategoryCard(
                                 modifier = Modifier.weight(1f),
-                                emoji = "🖱️",
-                                name = "Mouses",
-                                cardBackground = cardBackground,
-                                neonGreen = neonGreen
+                                imageResId = R.drawable.auric,
+                                name = "Accesorios",
+                                cardBackground = cardBackground
                             )
                         }
 
@@ -357,17 +371,15 @@ fun HomeScreen(
                         ) {
                             CategoryCard(
                                 modifier = Modifier.weight(1f),
-                                emoji = "🖥️",
-                                name = "Monitores",
-                                cardBackground = cardBackground,
-                                neonGreen = neonGreen
+                                imageResId = R.drawable.play5,
+                                name = "Consolas",
+                                cardBackground = cardBackground
                             )
                             CategoryCard(
                                 modifier = Modifier.weight(1f),
-                                emoji = "🪑",
-                                name = "Sillas Gamer",
-                                cardBackground = cardBackground,
-                                neonGreen = neonGreen
+                                imageResId = R.drawable.pc2,
+                                name = "Computadores Gamers",
+                                cardBackground = cardBackground
                             )
                         }
 
@@ -378,17 +390,34 @@ fun HomeScreen(
                         ) {
                             CategoryCard(
                                 modifier = Modifier.weight(1f),
-                                emoji = "🎧",
-                                name = "Headsets",
-                                cardBackground = cardBackground,
-                                neonGreen = neonGreen
+                                imageResId = R.drawable.silla2,
+                                name = "Sillas Gamers",
+                                cardBackground = cardBackground
                             )
                             CategoryCard(
                                 modifier = Modifier.weight(1f),
-                                emoji = "🎮",
-                                name = "Accesorios",
-                                cardBackground = cardBackground,
-                                neonGreen = neonGreen
+                                imageResId = R.drawable.mouse2,
+                                name = "Mouse",
+                                cardBackground = cardBackground
+                            )
+                        }
+
+                        // Fila 4
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CategoryCard(
+                                modifier = Modifier.weight(1f),
+                                imageResId = R.drawable.mousepad2,
+                                name = "Mousepad",
+                                cardBackground = cardBackground
+                            )
+                            CategoryCard(
+                                modifier = Modifier.weight(1f),
+                                imageResId = R.drawable.polera_negra,
+                                name = "Poleras Personalizadas",
+                                cardBackground = cardBackground
                             )
                         }
                     }
@@ -406,7 +435,7 @@ fun HomeScreen(
 @Composable
 fun ProductCard(
     modifier: Modifier = Modifier,
-    emoji: String,
+    @DrawableRes imageResId: Int?,
     name: String,
     price: String,
     neonGreen: Color,
@@ -424,7 +453,7 @@ fun ProductCard(
                 .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Imagen del producto
+            // Imagen del producto (desde recursos)
             Surface(
                 modifier = Modifier
                     .size(80.dp)
@@ -435,10 +464,20 @@ fun ProductCard(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Text(
-                        text = emoji,
-                        fontSize = 40.sp
-                    )
+                    if (imageResId != null) {
+                        Image(
+                            painter = painterResource(id = imageResId),
+                            contentDescription = name,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Image,
+                            contentDescription = name,
+                            tint = Color.Gray
+                        )
+                    }
                 }
             }
 
@@ -451,8 +490,9 @@ fun ProductCard(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                lineHeight = 14.sp,
-                modifier = Modifier.height(32.dp)
+                lineHeight = 16.sp,
+                maxLines = 2,
+                modifier = Modifier.height(40.dp)
             )
 
             // Precio
@@ -493,10 +533,9 @@ fun ProductCard(
 @Composable
 fun CategoryCard(
     modifier: Modifier = Modifier,
-    emoji: String,
+    @DrawableRes imageResId: Int,
     name: String,
-    cardBackground: Color,
-    neonGreen: Color
+    cardBackground: Color
 ) {
     Card(
         modifier = modifier.height(120.dp),
@@ -512,9 +551,14 @@ fun CategoryCard(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = emoji,
-                    fontSize = 48.sp
+                // Imagen de la categoría
+                Image(
+                    painter = painterResource(id = imageResId),
+                    contentDescription = name,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Fit
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -528,4 +572,3 @@ fun CategoryCard(
         }
     }
 }
-

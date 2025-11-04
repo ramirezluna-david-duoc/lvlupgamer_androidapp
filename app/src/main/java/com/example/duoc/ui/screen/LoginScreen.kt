@@ -1,5 +1,8 @@
 package com.example.duoc.ui.screen
 
+import com.example.duoc.R
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +18,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -61,24 +63,15 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo
-            Surface(
+            // Logo (imagen desde recursos)
+            androidx.compose.foundation.Image(
+                painter = painterResource(id = R.drawable.logo), // Si agregas tu logo a drawable, usa: R.drawable.logo
+                contentDescription = "Logo",
                 modifier = Modifier
                     .size(120.dp)
                     .padding(bottom = 32.dp),
-                shape = RoundedCornerShape(16.dp),
-                color = Color.White
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "",
-                        fontSize = 64.sp
-                    )
-                }
-            }
+                contentScale = ContentScale.Crop
+            )
 
             // Título
             Text(
@@ -249,4 +242,3 @@ fun LoginScreen(
         }
     }
 }
-

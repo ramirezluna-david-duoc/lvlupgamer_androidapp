@@ -7,10 +7,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.duoc.ui.screen.HomeScreen
 import com.example.duoc.ui.screen.LoginScreen
+import com.example.duoc.ui.screen.CatalogScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
+    object Catalog : Screen("catalog")
 }
 
 @Composable
@@ -37,9 +39,17 @@ fun AppNavigation(
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
                     }
+                },
+                onNavigateToCatalog = {
+                    navController.navigate(Screen.Catalog.route)
                 }
+            )
+        }
+
+        composable(Screen.Catalog.route) {
+            CatalogScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }
 }
-
