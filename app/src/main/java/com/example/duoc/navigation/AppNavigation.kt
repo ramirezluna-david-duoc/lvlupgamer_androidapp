@@ -8,11 +8,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.duoc.ui.screen.HomeScreen
 import com.example.duoc.ui.screen.LoginScreen
 import com.example.duoc.ui.screen.CatalogScreen
+import com.example.duoc.ui.screen.ProductDetailScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
     object Catalog : Screen("catalog")
+    object ProductDetail : Screen("product_detail")
 }
 
 @Composable
@@ -48,7 +50,32 @@ fun AppNavigation(
 
         composable(Screen.Catalog.route) {
             CatalogScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onNavigateHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                    }
+                },
+                onNavigateToCart = {
+                    // TODO: Navegar a pantalla de carrito cuando exista
+                },
+                onOpenProductDetail = {
+                    navController.navigate(Screen.ProductDetail.route)
+                }
+            )
+        }
+
+        composable(Screen.ProductDetail.route) {
+            ProductDetailScreen(
+                onBack = { navController.popBackStack() },
+                onNavigateHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                    }
+                },
+                onNavigateToCart = {
+                    // TODO: Navegar a pantalla de carrito cuando exista
+                }
             )
         }
     }

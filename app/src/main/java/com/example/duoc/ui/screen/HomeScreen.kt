@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.duoc.ui.components.MainBottomBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -181,50 +182,15 @@ fun HomeScreen(
                 )
             },
             bottomBar = {
-                NavigationBar(
-                    containerColor = darkGray,
-                    contentColor = Color.White
-                ) {
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                        label = { Text("Home", color = if (selectedTab == 0) neonGreen else Color.White) },
-                        selected = selectedTab == 0,
-                        onClick = { selectedTab = 0 },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = neonGreen,
-                            unselectedIconColor = Color.White,
-                            indicatorColor = backgroundColor
-                        )
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.ShoppingBag, contentDescription = "Productos") },
-                        label = { Text("Productos", color = if (selectedTab == 1) neonGreen else Color.White) },
-                        selected = selectedTab == 1,
-                        onClick = {
-                            onNavigateToCatalog()
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = neonGreen,
-                            unselectedIconColor = Color.White,
-                            indicatorColor = backgroundColor
-                        )
-                    )
-                    NavigationBarItem(
-                        icon = {
-                            BadgedBox(badge = { Badge { Text("0") } }) {
-                                Icon(Icons.Default.ShoppingCart, contentDescription = "Carrito")
-                            }
-                        },
-                        label = { Text("Carrito", color = if (selectedTab == 2) neonGreen else Color.White) },
-                        selected = selectedTab == 2,
-                        onClick = { selectedTab = 2 },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = neonGreen,
-                            unselectedIconColor = Color.White,
-                            indicatorColor = backgroundColor
-                        )
-                    )
-                }
+                MainBottomBar(
+                    selectedTab = selectedTab,
+                    onHomeClick = { selectedTab = 0 },
+                    onProductsClick = { onNavigateToCatalog() },
+                    onCartClick = { selectedTab = 2 },
+                    backgroundColor = backgroundColor,
+                    darkGray = darkGray,
+                    neonGreen = neonGreen
+                )
             }
         ) { paddingValues ->
             LazyColumn(

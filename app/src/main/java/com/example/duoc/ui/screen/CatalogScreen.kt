@@ -2,6 +2,7 @@ package com.example.duoc.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,23 +14,31 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.duoc.model.Product
 import com.example.duoc.viewmodel.CatalogViewModel
+import com.example.duoc.ui.components.MainBottomBar
+import com.example.duoc.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogScreen(
     viewModel: CatalogViewModel = viewModel(),
-    onBack: (() -> Unit)? = null
+    onBack: (() -> Unit)? = null,
+    onNavigateHome: (() -> Unit)? = null,
+    onNavigateToCart: (() -> Unit)? = null,
+    onOpenProductDetail: (() -> Unit)? = null
 ) {
     // Colores del proyecto (consistentes con Home)
     val backgroundColor = Color(0xFF000000)
@@ -37,6 +46,8 @@ fun CatalogScreen(
     val electricBlue = Color(0xFF00BFFF)
     val cardBackground = Color(0xFF1A1A2E)
     val darkGray = Color(0xFF1A1A1A)
+
+    val selectedTab = remember { mutableStateOf(1) } // 0 Home, 1 Productos, 2 Carrito
 
     Scaffold(
         topBar = {
@@ -52,11 +63,28 @@ fun CatalogScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: Navegar al carrito */ }) {
+                    IconButton(onClick = { onNavigateToCart?.invoke() }) {
                         Icon(Icons.Filled.ShoppingCart, contentDescription = "Carrito", tint = electricBlue)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = backgroundColor)
+            )
+        },
+        bottomBar = {
+            MainBottomBar(
+                selectedTab = selectedTab.value,
+                onHomeClick = {
+                    selectedTab.value = 0
+                    onNavigateHome?.invoke()
+                },
+                onProductsClick = { /* ya estás en catálogo */ },
+                onCartClick = {
+                    selectedTab.value = 2
+                    onNavigateToCart?.invoke()
+                },
+                backgroundColor = backgroundColor,
+                darkGray = darkGray,
+                neonGreen = neonGreen
             )
         },
         containerColor = backgroundColor
@@ -104,7 +132,8 @@ fun CatalogScreen(
                                 cardBackground = cardBackground,
                                 neonGreen = neonGreen,
                                 electricBlue = electricBlue,
-                                onAddToCart = { /* TODO: Integrar con carrito */ }
+                                onAddToCart = { /* TODO: Integrar con carrito */ },
+                                onClick = { onOpenProductDetail?.invoke() }
                             )
                         }
                         if (rowItems.size == 1) {
@@ -160,15 +189,20 @@ private fun ProductCard(
     cardBackground: Color,
     neonGreen: Color,
     electricBlue: Color,
-    onAddToCart: (Product) -> Unit
+    onAddToCart: (Product) -> Unit,
+    onClick: (() -> Unit)? = null
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .height(340.dp)
+            .clickable { onClick?.invoke() },
         colors = CardDefaults.cardColors(containerColor = cardBackground),
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(12.dp)
         ) {
             // Imagen
             Surface(
@@ -188,14 +222,31 @@ private fun ProductCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text(product.name, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Text(product.category, color = Color(0xFFBDBDBD), fontSize = 12.sp)
+            Text(
+                product.name,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                product.category,
+                color = Color(0xFFBDBDBD),
+                fontSize = 12.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                product.price,
+                color = neonGreen,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 8.dp)
+            )
 
-            Text(product.price, color = neonGreen, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = { onAddToCart(product) },
@@ -203,8 +254,10 @@ private fun ProductCard(
                 colors = ButtonDefaults.buttonColors(containerColor = electricBlue, contentColor = Color.White),
                 shape = RoundedCornerShape(10.dp)
             ) {
+                Icon(Icons.Filled.ShoppingCart, contentDescription = "Añadir", modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text("Agregar al carrito", fontSize = 14.sp, fontWeight = FontWeight.Bold)
             }
-        } //
+        }
     }
 }
